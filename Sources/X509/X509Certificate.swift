@@ -124,7 +124,7 @@ extension X509 {
         
         
         var issuer:String {
-            let seq = (self.tbsCertificate?.get(sequencePosition.issuer.rawValue) as! ASN1IA5String).value
+            let seq = (self.tbsCertificate?.get(sequencePosition.issuer.rawValue) as! ASN1Sequence)
             return String()
         }
         
