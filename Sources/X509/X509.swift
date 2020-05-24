@@ -72,7 +72,7 @@ public enum X509 {
     
     
     
-     
+    
     
     
     
@@ -81,9 +81,9 @@ public enum X509 {
 extension ASN1Sequence {
     public func findOid(oid:String) -> ASN1? {
         return self.getValue().first
-           
-       }
-
+        
+    }
+    
 }
 
 
@@ -102,7 +102,7 @@ extension Data {
         return value
     }
     
-        func subdata(in range: ClosedRange<Index>) -> Data {
-            return subdata(in: range.lowerBound ..< range.upperBound + 1)
-        }
+    func subdata(in range: ClosedRange<Index>) -> Data {
+        return subdata(in: range.lowerBound ..< range.upperBound + 1)
+    }
 }

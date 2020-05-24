@@ -7,7 +7,7 @@ import ASN1
 
 
 final class X509Tests: XCTestCase {
-    func testCertificateStandardFields()   {
+    func testCertificateBasicFields()   {
         
         //       XCTAssertEqual(X509.Certificate().text, "Hello, World!")
         
@@ -46,6 +46,10 @@ final class X509Tests: XCTestCase {
         
         XCTAssertEqual(certificate?.signatureValue.hexEncodedString(separation: ":"), "8F:71:72:DE:D4:C8:C6:26:DC:1F:8A:1B:88:D5:2E:77:19:DA:24:14:07:25:F7:8A:2E:A1:6C:56:77:B0:12:7E:CB:9F:53:2C:6C:16:BA:31:0E:13:70:C5:DF:26:40:E1:FB:57:77:A1:65:38:A8:B7:A3:FE:C4:C6:4E:AD:8C:60:27:1E:42:5D:B7:0B:B7:4E:D1:64:74:F4:C3:F3:DF:D3:9D:A0:AB:B6:CF:19:B1:EC:AE:3B:65:5E:AD:4C:0E:7F:1C:F0:3F:85:9E:FD:AA:4A:01:38:7F:FF:70:43:58:0C:53:82:0A:A2:36:8E:E1:81:FD:15:8A:1A:70:0F:29:B9:75:25:2B:5A:41:0A:E0:8A:D2:32:72:93:20:2D:0F:DC:F8:A1:30:FF:64:B0:50:3A:64:C9:E1:5C:09:E6:B1:CD:09:F7:48:F1:A9:11:F4:E6:18:CB:1F:46:09:B7:96:62:FE:49:09:C2:32:CC:FC:AF:65:EE:9C:78:80:84:9D:11:A5:89:4F:C4:CE:BC:B2:5A:1A:B8:57:1F:F3:45:E0:60:A1:7E:B1:39:67:D6:D5:90:28:B5:AD:1E:B7:3A:3D:A5:25:A3:39:DA:EB:8F:52:3B:AB:46:C0:84:BD:5E:52:E5:C4:F0:54:A6:E8:CF:19:A2:05:BF:65:89:0E:1C:4D:AE")
         XCTAssertEqual(certificate?.signatureValue.count,256)
+        
+        
+        XCTAssertEqual(certificate?.issuer, "")
+        
         
         
         
@@ -183,7 +187,7 @@ final class X509Tests: XCTestCase {
     
     
     static var allTests = [
-        ("testCertificateStandardFields", testCertificateStandardFields),
+        ("testCertificateBasicFields", testCertificateBasicFields),
         ("testCertificateDeepCopy", testCertificateDeepCopy),
         ("testCertificateTransparancy", testCertificateTransparancy),
     ]

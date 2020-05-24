@@ -61,6 +61,7 @@ extension X509 {
             self.signatureAlgorithmId = AlgorithmId(asn1Sequence: self.asn1Sequence.get(1) as! ASN1Sequence)
         }
         
+     
         
         public var encodedTBSCertificate:Data? {
             return Data(asn1Sequence.get(0).encode())
@@ -69,6 +70,23 @@ extension X509 {
         private var tbsCertificate:ASN1Sequence? {
             return asn1Sequence.get(0) as? ASN1Sequence
         }
+
+         public var encodedPreTbsCertificate:Data? {
+             
+             // create a copy of the tbsCertificate
+             let preTbsCertificate:ASN1Sequence = try! ASN1.build(self.tbsCertificate!.encode())as! ASN1Sequence
+             // get the extenstion sequence
+             let extensionSequence = (((preTbsCertificate.get(sequencePosition.extensions.rawValue) as! ASN1Ctx).value?[0]) as! ASN1Sequence)
+             // finde the SCT extension sequence
+             let extensionIndex = extensionSequence.getValue().firstIndex(where: {(($0 as! ASN1Sequence).get(0) as! ASN1ObjectIdentifier).oid == "1.3.6.1.4.1.11129.2.4.2"})
+             // remove it.
+             extensionSequence.remove(extensionIndex!)
+             
+             return Data(preTbsCertificate.encode())
+         }
+        
+        
+        // MARK: Basic Fields
         
         /// Gets the version (version number) value from the certificate.
         public var version: Int? {
@@ -83,8 +101,8 @@ extension X509 {
             return ((self.tbsCertificate?.get(sequencePosition.serialNumber.rawValue)) as! ASN1Integer).value
            }
         
-        var publicKey:PublicKey? {
-            return PublicKey(asn1Sequence: ((self.tbsCertificate?.get(sequencePosition.publicKey.rawValue)) as! ASN1Sequence))
+        var publicKey:X509.PublicKey? {
+            return X509.PublicKey(asn1Sequence: ((self.tbsCertificate?.get(sequencePosition.publicKey.rawValue)) as! ASN1Sequence))
         }
         
         
@@ -104,6 +122,21 @@ extension X509 {
             return Data((asn1Sequence.get(2) as! ASN1BitString).bits)
         }
         
+        
+        var issuer:String {
+            let seq = (self.tbsCertificate?.get(sequencePosition.issuer.rawValue) as! ASN1IA5String).value
+            return String()
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        // MARK: Extension Attributes
+        
         /// Gets the extension information of the given OID code.
         public func extensionObject(oid: String) -> X509.Extension? {
         
@@ -116,22 +149,6 @@ extension X509 {
         
         private var extensions:ASN1Sequence? {
             return (((self.tbsCertificate?.get(sequencePosition.extensions.rawValue) as! ASN1Ctx).value?[0]) as! ASN1Sequence)
-        }
-        
-        
-        /// preTbsCertificate
-        public var encodedPreTbsCertificate:Data? {
-            
-            // create a copy of the tbsCertificate
-            let preTbsCertificate:ASN1Sequence = try! ASN1.build(self.tbsCertificate!.encode())as! ASN1Sequence
-            // get the extenstion sequence
-            let extensionSequence = (((preTbsCertificate.get(sequencePosition.extensions.rawValue) as! ASN1Ctx).value?[0]) as! ASN1Sequence)
-            // finde the SCT extension sequence
-            let extensionIndex = extensionSequence.getValue().firstIndex(where: {(($0 as! ASN1Sequence).get(0) as! ASN1ObjectIdentifier).oid == "1.3.6.1.4.1.11129.2.4.2"})
-            // remove it.
-            extensionSequence.remove(extensionIndex!)
-            
-            return Data(preTbsCertificate.encode())
         }
         
         
