@@ -21,6 +21,16 @@ extension X509 {
             self.algorithmId = AlgorithmId.init(asn1Sequence: asn1Sequence.get(0) as! ASN1Sequence)
         }
         
+        init(pemRepresentation  pemString:String) throws {
+            guard let der = Data(base64Encoded: pemString) else {
+                    throw X509Error.invalidPEMString
+                }
+             let asn1Sequence = try ASN1.build(der) as! ASN1Sequence
+            
+            self.init(asn1Sequence: asn1Sequence)
+            
+        }
+        
         public var encodedSignature:Data? {
             return Data((asn1Sequence.get(1) as! ASN1BitString).bits)
         }
