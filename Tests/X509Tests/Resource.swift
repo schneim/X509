@@ -8,7 +8,7 @@
 import Foundation
 
 class Resource {
-    static var resourcePath = "./Tests/Certificates"
+    static let resourcePath = "./Tests/Certificates"
 
     let name: String
     let type: String
