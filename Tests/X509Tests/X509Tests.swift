@@ -1,3 +1,4 @@
+import Foundation
 import XCTest
 import CryptoKit
 import BigInt
@@ -13,10 +14,8 @@ final class X509Tests: XCTestCase {
         
         // read certificate from file
         
-        let thisSourceFile = URL(fileURLWithPath: #file)
-        let thisDirectory = thisSourceFile.deletingLastPathComponent()
-        let resourceURL = thisDirectory.appendingPathComponent("../Certificates/www_digicert_com.pem")
-        let pemCertificate = (try? String(contentsOf: resourceURL)) ?? ""
+        let resourceURL = Bundle.module.url(forResource: "www_digicert_com", withExtension: "pem", subdirectory: "Certificates")
+        let pemCertificate = (resourceURL.flatMap { try? String(contentsOf: $0, encoding: .utf8) }) ?? ""
         
         
         
@@ -59,10 +58,8 @@ final class X509Tests: XCTestCase {
     
     
     func testCertificateDeepCopy() {
-        let thisSourceFile = URL(fileURLWithPath: #file)
-        let thisDirectory = thisSourceFile.deletingLastPathComponent()
-        let resourceURL = thisDirectory.appendingPathComponent("../Certificates/www_digicert_com.pem")
-        let pemCertificate = (try? String(contentsOf: resourceURL)) ?? ""
+        let resourceURL = Bundle.module.url(forResource: "www_digicert_com", withExtension: "pem", subdirectory: "Certificates")
+        let pemCertificate = (resourceURL.flatMap { try? String(contentsOf: $0, encoding: .utf8) }) ?? ""
         
         let certificate =  try? X509.Certificate.init(pemRepresentation:pemCertificate)
         
@@ -76,10 +73,10 @@ final class X509Tests: XCTestCase {
     func testCertificateTransparancy() {
         let thisSourceFile = URL(fileURLWithPath: #file)
         let thisDirectory = thisSourceFile.deletingLastPathComponent()
-        let resourceURL = thisDirectory.appendingPathComponent("../Certificates/www_digicert_com.pem")
-        let issuerPublicKeyURL = thisDirectory.appendingPathComponent("../Certificates/www_digicert_com_CA_PK.pem")
-        let SCTSignatureURL = thisDirectory.appendingPathComponent("../Certificates/GoogleSkydiver_Signature.bin")
-        let preCertificateURL = thisDirectory.appendingPathComponent("../Certificates/GoogleSkydiver_SCT.bin")
+        let resourceURL = Bundle.module.url(forResource: "www_digicert_com", withExtension: "pem", subdirectory: "Certificates")!
+        let issuerPublicKeyURL = Bundle.module.url(forResource: "www_digicert_com_CA_PK", withExtension: "pem", subdirectory: "Certificates")!
+        let SCTSignatureURL = Bundle.module.url(forResource: "GoogleSkydiver_Signature", withExtension: "bin", subdirectory: "Certificates")!
+        let preCertificateURL = Bundle.module.url(forResource: "GoogleSkydiver_SCT", withExtension: "bin", subdirectory: "Certificates")!
         
         
         let pemCertificate = (try? String(contentsOf: resourceURL)) ?? ""
@@ -236,7 +233,7 @@ final class X509Tests: XCTestCase {
     }
     
     
-    static var allTests = [
+    static let allTests = [
         ("testCertificateBasicFields", testCertificateBasicFields),
         ("testCertificateDeepCopy", testCertificateDeepCopy),
         ("testCertificateTransparancy", testCertificateTransparancy),
@@ -270,3 +267,4 @@ extension SHA256Digest {
         return hexString
     }
 }
+

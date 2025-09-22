@@ -18,7 +18,7 @@ In addition, handling of public keys is also supported.
 
 # Dependencies
 
-X509 requires Swift 5.0.
+X509 requires Swift 6.2.
 
 The X509 package depends on the ASN1 package
 
